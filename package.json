@@ -1,0 +1,29 @@
+{
+  "name": "backend-nodejs",
+  "version": "1.0.0",
+  "description": "backend with nodejs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cuongtran1102/backend-nodejs.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "cuongtran1102",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cuongtran1102/backend-nodejs/issues"
+  },
+  "homepage": "https://github.com/cuongtran1102/backend-nodejs#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9"
+  }
+}
