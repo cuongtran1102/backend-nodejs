@@ -1,0 +1,39 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Create user page</title>
+  </head>
+  <body>
+    <div class="topnav">
+      <a href="/">Home</a>
+      <!-- href="/"(nghĩa là trang chủ) Tương đương với router.get("/", getHomePage) bên web.js -->
+
+      <a class="active" href="/create">Create user</a>
+      <!-- href="/create"(nghĩa là trang create user(create.ejs)) Tương đương với router.get("/create", getCreatePage); bên web.js -->
+    </div>
+    <div class="form-add-new">
+      <legend>CRUD User</legend>
+      <form action="/create-user" method="POST">
+        <!-- action="/create-user" sẽ link tới: router.post("/create-user", postCreateUser) bên file web.js -->
+        <fieldset>
+          <div class="input-group">
+            <label>Email:</label>
+            <input type="text" name="email" />
+            <!-- thuộc tính name của thẻ input giúp gửi dữ liệu từ html lên server cho method POST -->
+          </div>
+          <div class="input-group">
+            <label>Name:</label>
+            <input type="text" name="myname" />
+          </div>
+          <div class="input-group">
+            <label>City:</label>
+            <input type="text" name="city" />
+          </div>
+          <button class="btn-add-new">Save user</button>
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>

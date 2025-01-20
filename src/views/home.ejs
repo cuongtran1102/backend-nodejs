@@ -1,0 +1,40 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Home</title>
+  </head>
+  <body>
+    <div>
+      <div class="topnav">
+        <a class="active" href="/">Home</a>
+        <!-- href="/"(nghĩa là trang chủ) Tương đương với router.get("/", getHomePage) bên web.js -->
+
+        <a href="/create">Create user</a>
+      </div>
+      <h2 class="table-title">List User</h2>
+      <div class="table-container">
+        <table class="table-user">
+          <!-- convert listUsers lấy từ hàm getHomePage sang kiểu dữ liệu string(listUsers là kiểu Oject(JSON)) -->
+          <%= JSON.stringify(listUsers)%>
+          <!-- cú pháp: <%= %> dùng để cho file ejs biết được là kiểu dữ liệu của java script -->
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Actions</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>email@mail</td>
+            <td>cuong</td>
+            <td>Thanh Hoa</td>
+            <td><button>Edit</button> <button>Delete</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
