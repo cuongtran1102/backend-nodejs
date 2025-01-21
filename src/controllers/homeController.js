@@ -1,5 +1,10 @@
 const connection = require("../config/database");
-const { getAllUsers } = require("../services/CRUDService");
+const {
+  getAllUsers,
+  updateUserByID,
+  getUserByID,
+  deleteUserByID,
+} = require("../services/CRUDService");
 //định nghĩa các controller để sử dụng bên web.js
 
 const getHomePage = async (req, res) => {
@@ -16,6 +21,19 @@ const getABC = (req, res) => {
 };
 const getCreatePage = (req, res) => {
   return res.render("create.ejs"); //render file create.ejs cho trang create user
+};
+const getUpdatePage = async (req, res) => {
+  const userID = req.params.id;
+  //req.params thuộc kiểu object, thuộc tính của object này lưu các giá trị như id của user truyền từ homepage
+  // thông qua: router.get("/update/:id", getUpdatePage);
+  let [results, fields] = await connection.query(
+    "SELECT * FROM Users WHERE id = ?",
+    [userID]
+  );
+  let user = results && results.length > 0 ? results[0] : {}; //nếu tồn tạo biến results và results có ít nhất 1 phần tử user
+  //trả về phần tử user đầu tiền, ngược lại trả về đối tượng rỗng
+
+  return res.render("update.ejs", { user: user }); //truyền user sang trang update.ejs
 };
 
 //Sử dụng bất đồng bộ với async, await
@@ -37,4 +55,38 @@ const postCreateUser = async (req, res) => {
   );
   res.send("Create user success");
 };
-module.exports = { getHomePage, getABC, postCreateUser, getCreatePage };
+
+const postUpdateUser = async (req, res) => {
+  let id = req.body.id;
+  let email = req.body.email;
+  let name = req.body.myname;
+  let city = req.body.city;
+
+  await updateUserByID(email, name, city, id);
+  res.redirect("/"); //về home page sau khi update thành công
+};
+
+const postDeleteUser = async (req, res) => {
+  const userID = req.params.id;
+  let user = await getUserByID(userID);
+
+  res.render("delete.ejs", { user: user });
+};
+
+postHanldeDeleteUser = async (req, res) => {
+  const userID = req.body.id;
+  console.log(userID);
+  await deleteUserByID(userID);
+  res.redirect("/");
+};
+
+module.exports = {
+  getHomePage,
+  getABC,
+  postCreateUser,
+  getCreatePage,
+  getUpdatePage,
+  postUpdateUser,
+  postDeleteUser,
+  postHanldeDeleteUser,
+};

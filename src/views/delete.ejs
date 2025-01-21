@@ -1,0 +1,37 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Delete user</title>
+  </head>
+  <body>
+    <div class="topnav">
+      <a href="/">Home</a>
+      <!-- href="/"(nghĩa là trang chủ) Tương đương với router.get("/", getHomePage) bên web.js -->
+
+      <a href="/create">Create user</a>
+      <!-- href="/create"(nghĩa là trang create user(create.ejs)) Tương đương với router.get("/create", getCreatePage); bên web.js -->
+    </div>
+    <%= JSON.stringify(user)%>
+    <div class="form-add-new">
+      <legend>Delete User</legend>
+      <form action="/delete-user" method="POST">
+        <!-- action="/create-user" sẽ link tới: router.post("/create-user", postCreateUser) bên file web.js -->
+        <fieldset>
+          <div class="input-group d-none">
+            <label>ID:</label>
+            <input type="text" name="id" value="<%= user.id%>" />
+            <!-- thuộc tính name của thẻ input giúp gửi dữ liệu từ html lên server cho method POST -->
+          </div>
+          <div class="input-group">
+            <label>Email:</label>
+            <input type="text" name="email" value="<%= user.email%>" />
+            <!-- thuộc tính name của thẻ input giúp gửi dữ liệu từ html lên server cho method POST -->
+          </div>
+          <button class="btn-add-new">Delete user</button>
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>

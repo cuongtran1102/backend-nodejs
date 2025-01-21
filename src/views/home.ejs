@@ -26,13 +26,22 @@
             <th>City</th>
             <th>Actions</th>
           </tr>
+          <!-- render các user từ listUsers ra table row(tr) -->
+          <% listUsers.forEach(function(user) { %>
           <tr>
-            <td>1</td>
-            <td>email@mail</td>
-            <td>cuong</td>
-            <td>Thanh Hoa</td>
-            <td><button>Edit</button> <button>Delete</button></td>
+            <td><%= user.id%></td>
+            <td><%= user.email%></td>
+            <td><%= user.name%></td>
+            <td><%= user.city%></td>
+            <td>
+              <a href="/update/<%= user.id%>">Edit</a>
+              <!-- truyền id user sang trang update -->
+              <form action="/delete-user/<%= user.id%>" method="POST">
+                <button>Delete</button>
+              </form>
+            </td>
           </tr>
+          <% }); %>
         </table>
       </div>
     </div>

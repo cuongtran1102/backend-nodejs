@@ -84,3 +84,7 @@ td {
 .table-user tr:hover {
   background-color: aqua;
 }
+
+.d-none {
+  display: none;
+}
