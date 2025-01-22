@@ -1,3 +1,5 @@
+//file này dùng để khai báo các web routes để cho app(server.js sử dụng)
+
 const express = require("express"); //import express from express
 const {
   getHomePage,

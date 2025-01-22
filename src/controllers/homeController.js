@@ -1,20 +1,11 @@
-const connection = require("../config/database");
-const {
-  getAllUsers,
-  updateUserByID,
-  getUserByID,
-  deleteUserByID,
-} = require("../services/CRUDService");
+const User = require("../modals/user");
+
 //định nghĩa các controller để sử dụng bên web.js
 
 const getHomePage = async (req, res) => {
-  const results = await getAllUsers(); //vì hàm getAllUsers là bất đồng bộ nên phải dùng async, await
-  //sau khi render home.ejs, hàm getAllUsers sẽ truy vấn xuống database để lấy dữ liệu của user hiển thị lên table-user
-  return res.render("home.ejs", { listUsers: results }); //{listUsers, results}: lấy biến results gán cho listUsers và truyền sang home.ejs
-  //listUsers phải là kiểu object mới truyền sang một file ejs(home.ejs) được
-  // home.ejs sẽ nhận danh sách các user từ database từ biến listUsers
-  //reander file home.ejs và các router của web.js sẽ sử dụng hàm getHomePage để reander file home.ejs
-  //file home.ejs sẽ là trang chủ vì có "/"
+  const results = await User.find({});
+  console.log("results: ", results);
+  return res.render("home.ejs", { listUsers: results });
 };
 const getABC = (req, res) => {
   res.send("ABC");
@@ -26,12 +17,8 @@ const getUpdatePage = async (req, res) => {
   const userID = req.params.id;
   //req.params thuộc kiểu object, thuộc tính của object này lưu các giá trị như id của user truyền từ homepage
   // thông qua: router.get("/update/:id", getUpdatePage);
-  let [results, fields] = await connection.query(
-    "SELECT * FROM Users WHERE id = ?",
-    [userID]
-  );
-  let user = results && results.length > 0 ? results[0] : {}; //nếu tồn tạo biến results và results có ít nhất 1 phần tử user
-  //trả về phần tử user đầu tiền, ngược lại trả về đối tượng rỗng
+
+  let user = await User.findById(userID); // findById là phương thức tìm 1 document by id của mongoose
 
   return res.render("update.ejs", { user: user }); //truyền user sang trang update.ejs
 };
@@ -45,14 +32,8 @@ const postCreateUser = async (req, res) => {
   let city = req.body.city;
   console.log(`email: ${email}, name: ${name}, city: ${city}`);
 
-  //const [results, fields] dùng để truy vấn xuống database bằng sql
-  //biến results: là 1 object lưu trạng thái của lần truy vấn dạng INSERT
-  //fields dùng để lưu giá trị của trường mà lần truy vấn lấy được
-  const [results, fields] = await connection.query(
-    `INSERT INTO Users(email, name, city)
-    VALUES (?, ?, ?)`,
-    [email, name, city]
-  );
+  await User.create({ email: email, name: name, city: city });
+
   res.send("Create user success");
 };
 
@@ -62,21 +43,30 @@ const postUpdateUser = async (req, res) => {
   let name = req.body.myname;
   let city = req.body.city;
 
-  await updateUserByID(email, name, city, id);
+  // req.body là các giá trị lấy từ form-add-new của update.ejs
+  // req.body.id là giá trị lấy từ thuộc tính name của thẻ input có name="id" trong form-add-new của update.ejs
+  // tương tự với req.body.email, req.body.myname, ...
+
+  await User.updateOne({ _id: id }, { name: name, email: email, city: city });
+  // updateOne({điều kiện update}, {thuộc tính cần update: giá trị cần update})
+  // updateOne là 1 phương thức của mongoose cho pháp update 1 document dưới mongodb với điều kiện nhất định
+  //ở hàm User.updateOne điều kiện update là id
+
   res.redirect("/"); //về home page sau khi update thành công
 };
 
 const postDeleteUser = async (req, res) => {
   const userID = req.params.id;
-  let user = await getUserByID(userID);
+  let user = await User.findById(userID);
 
   res.render("delete.ejs", { user: user });
 };
 
 postHanldeDeleteUser = async (req, res) => {
   const userID = req.body.id;
-  console.log(userID);
-  await deleteUserByID(userID);
+
+  let result = await User.deleteOne({ _id: userID });
+  console.log(result);
   res.redirect("/");
 };
 
