@@ -15,14 +15,11 @@ const webRoutes = require("./routes/web"); //lấy các router từ web.js
 //khai báo api routes
 const apiRouter = require("./routes/api"); //lấy các router từ api.js
 
-//khai báo connection
-const connection = require("./config/database");
-
 //khai báo fileUpload
 const fileUpload = require("express-fileupload");
 
-//sử dụng fileupload
-app.use(fileUpload);
+//khai báo connection
+const connection = require("./config/database");
 
 //config req.body(convert dữ liệu từ html trước khi request) để phục vụ việc gửi dữ liệu từ form lên server
 // ví dụ với form-add-new của file home.ejs
@@ -32,6 +29,9 @@ app.use(express.urlencoded({ extended: true }));
 //config teamplate engine
 //khai báo nơi lưu trữ các thư mục teamplate engine(views/sample.ejs)
 configViewEngine(app);
+
+//sử dụng fileupload(phải khai báo trước khi khai báo routes)
+app.use(fileUpload());
 
 //sử dụng web routes
 app.use("/", webRoutes);

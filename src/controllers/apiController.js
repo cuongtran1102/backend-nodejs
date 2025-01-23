@@ -1,6 +1,11 @@
 //file này định nghĩa controller api
 const User = require("../modals/user");
 
+const {
+  uploadSingleFile,
+  uploadMutipleFile,
+} = require("../services/fileService");
+
 const getUsersAPI = async (req, res) => {
   const results = await User.find({});
   return res.status(200).json({
@@ -49,9 +54,43 @@ const deleteUserAPI = async (req, res) => {
   });
 };
 
+//vì hàm uploadSingleFile là bất đồng bộ nên dùng async
+const postUploadFileAPI = async (req, res) => {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    //nếu req.files không tồn tại(null) hoặc Object.keys(req.files) === 0: req.files tồn tại nhưng không chứa bất kỳ tệp nào
+    return res.status(400).send("No files were uploaded."); //server trả về phản hồi với status code: 400 và dòng thông báo: "No files were uploaded."
+  }
+  let result = await uploadSingleFile(req.files.image); //vì hàm uploadSingleFile là bất đồng bộ nên dùng await
+  return res.status(200).json({
+    errorCode: 0,
+    data: result,
+  });
+};
+
+//lưu ý 2 hàm uploadMutipleFile và postUploadFileAPI đều bất đồng bộ nên phải dùng async, await
+const postUploadMutipleFileAPI = async (req, res) => {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send("No files were uploaded.");
+  }
+  //nếu req.files.image là 1 mảng(req.files.image chứa từ 2 tệp trở lên)
+  if (Array.isArray(req.files.image)) {
+    //tham số truyền vào hàm uploadMutipleFile là req.files.image
+    let result = await uploadMutipleFile(req.files.image);
+    return res.status(200).json({
+      errorCode: 0,
+      data: result,
+    });
+  } else {
+    //nếu req.files.image ko phải là 1 mảng(req.files.image chỉ chứa 1 phần tử) thì chỉ upload 1 file với hàm postUploadFileAPI
+    return await postUploadFileAPI(req, res);
+  }
+};
+
 module.exports = {
   getUsersAPI,
   postCreateUserAPI,
   putUpdateUserAPI,
   deleteUserAPI,
+  postUploadFileAPI,
+  postUploadMutipleFileAPI,
 };

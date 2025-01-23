@@ -62,7 +62,7 @@ const postDeleteUser = async (req, res) => {
   res.render("delete.ejs", { user: user });
 };
 
-postHanldeDeleteUser = async (req, res) => {
+const postHanldeDeleteUser = async (req, res) => {
   const userID = req.body.id;
 
   let result = await User.deleteOne({ _id: userID });
